@@ -1,0 +1,7 @@
+int64 x
+int64 y 
+int64 z 
+---
+float64 theta_1
+float64 theta_2
+float64 d_3
