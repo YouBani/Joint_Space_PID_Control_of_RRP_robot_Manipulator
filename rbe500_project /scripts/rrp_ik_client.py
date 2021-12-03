@@ -17,15 +17,20 @@ def inverse_kinematics_client(x, y, z):
 
 def usage():
     return "%s [x y z]"%sys.argv[0]
-    
-    if __name__ == "__main__":
-        if len(sys.argv) == 4:
-            x = int(sys.argv[1])
-            y = int(sys.argv[2])
-            z = int(sys.argv[3])
-        else:
-            print(usage())
-            sys.exit(1)
-            print("Requesting %s"%(req))
-            # print("%s + %s = %s"%(x, y, add_two_ints_client(x, y)))
-            print(" Angle are %s "%(inverse_kinematics_client(req)))
+
+print(len(sys.argv))
+if __name__ == "__main__":
+    if len(sys.argv) == 4:
+        x = int(sys.argv[1])
+        y = int(sys.argv[2])
+        z = int(sys.argv[3])
+        print("We are here")
+    else:
+        print(usage())
+        sys.exit(1)
+        print("Requesting %s"%(req))
+        # print("%s + %s = %s"%(x, y, add_two_ints_client(x, y)))
+        print(" Angle are %s "%(inverse_kinematics_client(req)))
+
+    angle_values = inverse_kinematics_client(x, y, z)
+    print(angle_values)
