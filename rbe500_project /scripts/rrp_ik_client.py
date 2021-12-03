@@ -19,18 +19,21 @@ def usage():
     return "%s [x y z]"%sys.argv[0]
 
 print(len(sys.argv))
+
+print("arg 1 ",sys.argv[1])
+
 if __name__ == "__main__":
     if len(sys.argv) == 4:
-        x = int(sys.argv[1])
-        y = int(sys.argv[2])
-        z = int(sys.argv[3])
-        print("We are here")
+        x = float(sys.argv[1])
+        y = float(sys.argv[2])
+        z = float(sys.argv[3])
+        print("We are here!")
     else:
         print(usage())
         sys.exit(1)
-        print("Requesting %s"%(req))
-        # print("%s + %s = %s"%(x, y, add_two_ints_client(x, y)))
-        print(" Angle are %s "%(inverse_kinematics_client(req)))
+        # print("Requesting %s"%(req))
+        # # print("%s + %s = %s"%(x, y, add_two_ints_client(x, y)))
+        # print(" Angle are %s "%(inverse_kinematics_client(req)))
 
-    angle_values = inverse_kinematics_client(x, y, z)
-    print(angle_values)
+    angles = inverse_kinematics_client(x, y, z)
+    print(angles)
