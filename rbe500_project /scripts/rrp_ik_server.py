@@ -12,10 +12,11 @@ def inverse_kinematics(req):
 # input: the position of end effector [x, y, z]
 # output: joint angles [joint1, joint2, joint3]
     angles = Vector3()
-    
+    l = 0.45
     l1 = 0.425
     l2 = 0.345
-    l3 = 0.11
+    l3 = 0.345 + 0.05
+
 
     # Px = float(position[0])
     # Py = float(position[1])
@@ -25,10 +26,31 @@ def inverse_kinematics(req):
     Pz = req.z
     # Px = 0.44
     # d3 = l3 - Pz
-    d3 = Pz
-    theta2 = acos(Px**2 + Py**2 - l1**2 - l2**2) / (2 * l1 * l2)  
-    print("theta2", theta2)
 
+
+    theta2 = acos((Px**2 + Py**2 - l1**2 - l2**2)/(2*l1*l2))
+    theta1 = atan2(Py, Px) - atan2((l2+l1)*sin(theta2), l1+l2+cos(theta2))
+    # theta1 = atan2(Py, Px) - (l1 + l2 * cos(theta2))/sqrt(Px**2 + Py**2)
+    d3 = l3 - Pz
+
+#====#
+    # d3 = Pz
+    # cos_theta2 = acos(Px**2 + Py**2 - l1**2 - l2**2) / (2 * l1 * l2)  
+    # sin_theta2 = sqrt(1-(cos_theta2**2))
+
+    # theta2 = atan2(sin_theta2, cos_theta2)
+    # print("theta2", theta2)
+    # alpha = atan2(Py, Px)
+    # beta = (l1 + l2 * cos(theta2))/sqrt(Px**2 + Py**2)
+
+    # # alpha = math.atan2(y,x)
+    # # D1 = (x**2+y**2)/(2*L*math.sqrt(x**2+y**2))
+    # # C1 = math.sqrt(1-(D1**2))
+    # # beta = math.atan2(C1, D1)
+    
+    # theta1 = alpha - beta
+
+#===
     # stheta2 = sqrt(1 - (ctheta2**2))
     # print("stheta2", stheta2)
     # theta2 = atan2(stheta2, ctheta2)
@@ -37,10 +59,7 @@ def inverse_kinematics(req):
     
     # ctheta1  =  (px  *  (l1  +  l2  *  ctheta2)  +  py  *  l2  * stheta2) / (px**2 + py**2)  
 
-    alpha = atan2(Py, Px)
-    beta = (l1 + l2 * cos(theta2))/sqrt(Px**2 + Py**2)
 
-    theta1 = alpha - beta
     # result.theta1 = joint1
     # result.theta2 = theta2
     # result.d3 = d3
