@@ -11,6 +11,10 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
+
+  message_runtime
+  geometry_msgs
+  sensor_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -52,7 +56,10 @@ find_package(catkin REQUIRED COMPONENTS
 #   Message1.msg
 #   Message2.msg
 # )
-
+add_message_files(
+   FILES
+   joint_angles.msg
+)
 ## Generate services in the 'srv' folder
 add_service_files(DIRECTORY srv FILES rrpIK.srv)
 
@@ -67,7 +74,9 @@ add_service_files(DIRECTORY srv FILES rrpIK.srv)
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-  std_msgs  # Or other packages containing msgs
+   std_msgs
+   geometry_msgs
+   sensor_msgs  # Or other packages containing msgs
 )
 
 ################################################
@@ -162,7 +171,9 @@ include_directories(
 # )
 
 catkin_install_python(PROGRAMS 
-	scripts/rrp_ik_server.py scripts/rrp_ik_client.py
+	scripts/rrp_ik_server.py 
+	scripts/rrp_ik_client.py 
+	scripts/rrp_position_controller.py
 	DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

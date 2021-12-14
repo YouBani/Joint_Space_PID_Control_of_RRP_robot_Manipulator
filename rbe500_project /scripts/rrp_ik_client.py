@@ -5,6 +5,7 @@ from __future__ import print_function
 import sys
 import rospy
 from rbe500_project.srv import *
+from geometry_msgs.msg import Pose, Point
 
 def inverse_kinematics_client(x, y, z):
     rospy.wait_for_service('inverse_kinematics')
@@ -18,16 +19,16 @@ def inverse_kinematics_client(x, y, z):
 def usage():
     return "%s [x y z]"%sys.argv[0]
 
-print(len(sys.argv))
+# print(len(sys.argv))
 
-print("arg 1 ",sys.argv[1])
+# print("arg 1 ",sys.argv[1])
 
 if __name__ == "__main__":
     if len(sys.argv) == 4:
         x = float(sys.argv[1])
         y = float(sys.argv[2])
         z = float(sys.argv[3])
-        print("We are here!")
+        # print("We are here!")
     else:
         print(usage())
         sys.exit(1)
