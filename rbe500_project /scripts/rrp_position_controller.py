@@ -29,10 +29,11 @@ joint_angle = inverse_kinematics(test_case)
 joint_names = 'theta1', 'theta2', 'd3'
 
 Kp_vals = [25, 70, 40]
+Ki_vals = [25, 30, 15]
 Kd_vals = [25, 10, 20]
 
 # 10Hz frequency
-ros_rate = 10.0
+ros_rate = 100.0
 
 # Loop execution rate in seconds (1/freq)
 sampling_rate = (1/ros_rate) 
@@ -47,6 +48,9 @@ timer_started = False
 times = []
 set_points = []
 curr_points = []
+totalErrorJ1 = 0
+totalErrorJ2 = 0
+totalErrorJ3 = 0
 
 def reset_timer():
     global times, set_points, curr_points, timer_started
@@ -119,34 +123,37 @@ def control(set_point, curr_point, joint_name):
         
 
         derivative_err = (last_positions[0] - curr_point)/sampling_rate
+        totalErrorJ1 = (totErrorJ1 + position_err)*sampling_rate
 
         # Set reference vals
         last_positions[0] = curr_point
         last_set_points[0] = set_point
 
         # PD output
-        effort = position_err*Kp_vals[0] + derivative_err*Kd_vals[0]
+        effort = position_err*Kp_vals[0] + totalErrorJ1*Ki_vals[0] + derivative_err*Kd_vals[0]
         
     elif (joint_name is 'theta2'):
 
         derivative_err = (last_positions[1] - curr_point)/sampling_rate
+        totalErrorJ2 = (totErrorJ2 + position_err)*sampling_rate
 
         # Set reference vals
         last_positions[1] = curr_point
         last_set_points[1] = set_point
 
         # PD output
-        effort = position_err*Kp_vals[1] + derivative_err*Kd_vals[1]
+        effort = position_err*Kp_vals[1] + totalErrorJ2*Ki_vals[1] + derivative_err*Kd_vals[1]
     elif (joint_name is 'd3'):
 
-        derivative_err = (last_positions[2] - curr_point)/sampling_rate
+        derivative_err = (last_poset_sitions[2] - curr_point)/sampling_rate
+        totalErrorJ3 = (totErrorJ3 + position_err)*sampling_rate
 
         # Set reference vals
         last_positions[2] = curr_point
         last_set_points[2] = set_point
 
         # PD output
-        effort = position_err*Kp_vals[2] + derivative_err*Kd_vals[2]
+        effort = position_err*Kp_vals[2] + totalErrorJ3*Ki_vals[2] + derivative_err*Kd_vals[2]
 
     # Append data entries to lists
     times.append(time.time())
