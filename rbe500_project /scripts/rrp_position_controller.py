@@ -66,9 +66,9 @@ def call_back(data):
     curr_theta2 = data.position[1]
     curr_d3 = data.position[2]
 
-    # control(joint_angle.joint_vals.theta1, theta1, joint_names[0])
-    # control(joint_angle.joint_vals.theta2, theta2, joint_names[1])
-    # control(joint_angle.joint_vals.d3, d3, joint_names[2])
+    # control(joint_angle.joint_vals.theta1, curr_theta1, joint_names[0])
+    # control(joint_angle.joint_vals.theta2, curr_theta2, joint_names[1])
+    # control(joint_angle.joint_vals.d3, curr_d3, joint_names[2])
 
 
 def get_position():
@@ -116,7 +116,7 @@ def control(set_point, curr_point, joint_name):
     position_err = set_point - curr_point
 
     if (joint_name is 'theta1'):
-        position_err = joint_angle.joint_vals.theta1 - curr_theta1
+        
 
         derivative_err = (last_positions[0] - curr_point)/sampling_rate
 
@@ -126,6 +126,7 @@ def control(set_point, curr_point, joint_name):
 
         # PD output
         effort = position_err*Kp_vals[0] + derivative_err*Kd_vals[0]
+        
     elif (joint_name is 'theta2'):
 
         derivative_err = (last_positions[1] - curr_point)/sampling_rate
@@ -151,13 +152,14 @@ def control(set_point, curr_point, joint_name):
     times.append(time.time())
     set_points.append(set_point)
     curr_points.append(curr_point)
+    print("effort", effort)
 
-    # if joint_name == "theta1":
-    #     joint_effort(effort, "joint1")
-    # elif joint_name == "theta2":
-    #     joint_effort(effort, "joint2")
-    # elif joint_name == "d3":
-    #     joint_effort(effort, "joint3")
+    if joint_name == "theta1":
+        joint_effort(effort, "joint1")
+    elif joint_name == "theta2":
+        joint_effort(effort, "joint2")
+    elif joint_name == "d3":
+        joint_effort(effort, "joint3")
 
 
 def joint_state_callback(msg):
@@ -178,14 +180,15 @@ def joint_state_callback(msg):
 
 if __name__ == "__main__":
     try:
-        get_position()
-        print(curr_theta1, curr_theta2, curr_d3)
+        # get_position()
+        # print(curr_theta1, curr_theta2, curr_d3)
+        control(joint_angle.joint_vals.theta1, curr_theta1, "theta1")
         # joint_effort(2, "joint1")
         # theta1 = get_position()[0]
         # theta1 = joint_state_position[0]
         # theta2 = joint_state_position[1]
         # d3 = joint_state_position[2]
- 
+        # control(last_set_points[0], get_position(joint_names[0]), joint_names[0])
     # do_pd_control(set_point, curr_point, joint_name):
         # control(joint_angle.joint_vals.theta1, theta1, joint_names[0])
         # get_position()
