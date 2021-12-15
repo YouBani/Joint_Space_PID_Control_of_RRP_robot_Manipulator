@@ -2,16 +2,13 @@
 import rospy
 import csv
 import time
-# from gazebo_msgs.srv import *
 from sensor_msgs.srv import *
 from sensor_msgs.msg import JointState
 
-# from rbe500_project.msg import joint_angles 
 from std_msgs.msg import Float64
 from rbe500_project.srv import rrpIK, rrpIKResponse
 from geometry_msgs.msg import Pose, Point, Quaternion, Vector3
 from rrp_ik_server import inverse_kinematics
-
 
 
 joint_names = ['theta1', 'theta2', 'd3']
@@ -19,18 +16,18 @@ case1 = [0, 0.77, 0.34]
 case2 = [-0.345, 0.425, 0.24]
 case3 = [-0.67, -0.245, 0.14]
 case4 = [0.77, 0.0, 0.39]
-case5 = [0.425, 0.344, 0.29]
-test_case = case2
+# case5 = [0.425, 0.344, 0.29]
+test_case = case3
 joint_angle = inverse_kinematics(test_case)
 # print(joint_angle.joint_vals.theta1)
 # print(joint_angle["joint_vals"])
 
-
+# rosrun rbe500_project rrp_position_controller.py
 joint_names = 'theta1', 'theta2', 'd3'
 
-Kp_vals = [1.5, 2.0, 3.0]
-Ki_vals = [0.05, 0.03, 1.5]
-Kd_vals = [2, 1000, 1000]
+Kp_vals = [3, 2, 200]
+Ki_vals = [0.01, 0.01, 0.01]
+Kd_vals = [15, 5, 0.05]
 
 # 100Hz frequency
 ros_rate = 100.0
@@ -57,10 +54,6 @@ def reset_timer():
     curr_point = []
     timer_started = False
 
-# curr_theta1 = 0
-# curr_theta2 = 0
-# curr_d3 = 0
-
 def call_back(data):
     global curr_theta1, curr_theta2, curr_d3
     curr_theta1 = data.position[0]
@@ -76,10 +69,7 @@ def get_position():
     rate_value = 100
     rospy.init_node("listner", anonymous=True)
     joint_call = rospy.Subscriber("/rrp/joint_states", JointState, call_back)
-    # joint_data = joint_call(joint)
-    # rospy.Rate(10)
     rate = rospy.Rate(rate_value)
-
     rate.sleep()
 
 
@@ -173,17 +163,19 @@ def control(set_point, curr_point, joint_name):
 if __name__ == "__main__":
     try:
         get_position()
-        # curr_theta1 = 0
-        # print("curr_theta1", curr_theta1)
-        # print("set point", joint_angle.joint_vals.theta1)
-        # print("joint_angle.joint_vals.theta1", joint_angle.joint_vals.theta1)
         while joint_angle.joint_vals.theta1 - curr_theta1 > 0.15:
             # print("the error", joint_angle.joint_vals.theta1 - curr_theta1)
             control(joint_angle.joint_vals.theta1, curr_theta1, "theta1")
-            #control(joint_angle.joint_vals.theta2, theta2, joint_names[1])
-#           control(joint_angle.joint_vals.d3, d3, joint_names[2])
+        joint_effort(0, "joint1")
 
-        # joint_effort(10, "joint1")
-        # print(curr_theta1)
+        while joint_angle.joint_vals.theta2 - curr_theta2 > 0.15:
+            control(joint_angle.joint_vals.theta2, curr_theta2, "theta2")
+        joint_effort(0, "joint2")
+        while joint_angle.joint_vals.d3 - curr_d3 > 0.002:
+            control(joint_angle.joint_vals.d3, curr_d3, "d3")
+        joint_effort(0, "joint3")
+        rospy.sleep(1)
+
+
     except rospy.ROSInterruptException:
         pass
