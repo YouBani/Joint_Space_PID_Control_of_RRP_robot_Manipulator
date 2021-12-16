@@ -3,5 +3,5 @@ This is the code for the group project in RBE 500 Foundation of  Robotics at Wor
 
 To launch the Gazebo simulation:
 
-<pre> [copy]roslaunch rrp_gazebo gazebo.launch[/copy]
+[copy]roslaunch rrp_gazebo gazebo.launch[/copy]
 
