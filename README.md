@@ -5,6 +5,6 @@ To launch the Gazebo simulation:
 
 <pre> roslaunch rrp_gazebo gazebo.launch
 
-roslaunch rrp_control rrp_effort_control.launch
+<pre>roslaunch rrp_control rrp_effort_control.launch
 
-roslaunch rbe500_project rrp.launch
+<pre>roslaunch rbe500_project rrp.launch
